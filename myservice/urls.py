@@ -23,4 +23,6 @@ urlpatterns = [
     path('hello/', views.hello),
     path('hello/<slug:slug>', views.hello_name),
     path('hello1/', views.hello_with_params),
+    path('form/', views.show_form),
+    path('form/formdata/', views.show_form_data),
 ]

@@ -28,3 +28,14 @@ def hello_with_params(request):
         'footer_text': 'До свидания!'
     }
     return HttpResponse(template.render(context, request))
+
+
+def show_form(request):
+    template = loader.get_template('form.html')
+    return HttpResponse(template.render(None, request))
+
+
+def show_form_data(request):
+    name = request.POST.get("name", "Undefined")
+    age = request.POST.get("age", 1)
+    return HttpResponse(f"Имя: {name}<br>Возраст: {age}")

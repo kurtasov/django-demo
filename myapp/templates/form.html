@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sample form</title>
+</head>
+<body>
+    <h1>Пример формы</h1>
+    <form method="post" action="formdata/">
+        {% csrf_token %}
+        <p>Имя:<br> <input name="name" /></p>
+        <p>Возраст:<br> <input name="age" type="number" /></p>
+        <input type="submit" value="Отправить" />
+    </form>
+</body>
+</html>
