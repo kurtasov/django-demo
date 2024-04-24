@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from myapp import views
 from django.urls import path
+from wildewidgets import WildewidgetDispatch
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +26,6 @@ urlpatterns = [
     path('hello1/', views.hello_with_params),
     path('form/', views.show_form),
     path('form/formdata/', views.show_form_data),
+    path('wildewidgets_json', WildewidgetDispatch.as_view(), name='wildewidgets_json'),
+    path("datatable/", views.TableView.as_view(), name="datatable"),
 ]
