@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.views.generic.base import TemplateView
 from wildewidgets import DataTable
+from myapp.models import Customers
 
 
 def hello(request):
@@ -86,4 +87,24 @@ class TableView(TemplateView):  # See https://docs.djangoproject.com/en/5.0/ref/
         table.add_row(name='Дементьев', rating=63, age=24)
         table.add_row(name='Дзюба', rating=73, age=23)
         kwargs['table'] = table
+        return super().get_context_data(**kwargs)
+
+
+class DbTableView(TemplateView):
+    template_name = ("dbtable.html")
+
+    def get_context_data(self, **kwargs):
+        table = DataTable()
+        data = Customers.objects.all()
+
+        table.add_column('CompanyName')
+        table.add_column('Address')
+        table.add_column('City')
+        table.add_column('Region')
+        table.add_column('PostalCode')
+
+        for o in data:
+            table.add_row(CompanyName=o.companyname, Address=o.address, City=o.city, Region=o.region, PostalCode=o.postalcode)
+
+        kwargs['dbtable'] = table
         return super().get_context_data(**kwargs)
