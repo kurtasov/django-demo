@@ -11,7 +11,11 @@
   <script src="https://cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js"></script>
 </head>
 <body>
-<div id="orders-table">{{ dbtable }}</div>
+
+<div id="orders-table">
+  <button class="btn btn-danger show-form-create" data-url="create">Create</button><br>
+  {{ dbtable }}
+</div>
 
   <div class="modal fade" id="modal-element">
     <div class="modal-dialog">
@@ -60,6 +64,10 @@
     //delete
     $('#orders-table').on("click",".show-form-delete",ShowForm);
     $('#modal-element').on("submit",".delete-form",SaveForm)
+
+    //create
+    $('#orders-table').on("click",".show-form-create",ShowForm)
+    $('#modal-element').on("submit",".create-form",SaveForm);
     });
   </script>
 </body>

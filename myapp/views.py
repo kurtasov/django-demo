@@ -3,7 +3,7 @@ from django.template import loader
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView
 from wildewidgets import DataTable
-from myapp.models import Customers, Orders
+from myapp.models import Customers, Orders, Employees
 
 
 def hello(request):
@@ -125,6 +125,19 @@ def delete_order(request, orderid):
     return JsonResponse(data)
 
 
+def create_order(request):
+    data = dict()
+    employees = Employees.objects.all()
+    context = {'employee_list': [e.lastname for e in employees]}
+    data['html_form'] = loader.render_to_string('create_order.html', context=context, request=request)
+    if request.method == "POST":
+        country_name = request.POST.get("country")
+        new_order = Orders(shipcountry=country_name, employeeid=employee)
+        new_order.save()
+
+    return JsonResponse(data)
+
+
 class OrdersView(TemplateView):
     template_name = ("dbtable.html")
 
@@ -141,9 +154,9 @@ class OrdersView(TemplateView):
             table.add_row(OrderID=o.orderid, ShipName=o.shipname,
                           Employee=f'{o.employeeid.lastname}, {o.employeeid.firstname}',
                           Actions=f'''<button class="btn btn-danger show-form-delete" data-url="delete/{o.orderid}">
-           <span class="glyphicon glyphicon-trash"></span>
-           Delete
-           </button>''')
+                                      <span class="glyphicon glyphicon-trash"></span>
+                                        Delete
+                                      </button>''')
 
         kwargs['dbtable'] = table
         return super().get_context_data(**kwargs)
