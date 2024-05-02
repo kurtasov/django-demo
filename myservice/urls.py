@@ -30,4 +30,5 @@ urlpatterns = [
     path("datatable/", views.TableView.as_view(), name="datatable"),
     path("dbtable/", views.DbTableView.as_view(), name="dbtable"),
     path("orders/", views.OrdersView.as_view(), name="orders"),
+    path("orders/delete/<int:orderid>", views.delete_order, name="delete_order"),
 ]

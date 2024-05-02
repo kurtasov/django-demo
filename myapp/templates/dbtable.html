@@ -6,10 +6,61 @@
   <link rel="stylesheet" href="{% static 'wildewidgets/css/wildewidgets.css' %}">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
   <script src="https://cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js"></script>
 </head>
 <body>
-{{ dbtable }}
+<div id="orders-table">{{ dbtable }}</div>
+
+  <div class="modal fade" id="modal-element">
+    <div class="modal-dialog">
+      <div class="modal-content"></div>
+    </div>
+  </div>
+
+  <script>
+    // See https://github.com/Shrestha7/django-crud-system/
+
+    $(document).ready(function(){
+        var ShowForm = function(){
+            var btn = $(this);
+            $.ajax({
+                url: btn.attr("data-url"),
+                type: 'get',
+                dataType:'json',
+                beforeSend: function(){
+                    $('#modal-element').modal('show');
+                },
+                success: function(data){
+                    $('#modal-element .modal-content').html(data.html_form);
+                }
+            });
+        };
+
+        var SaveForm =  function(){
+            var form = $(this);
+            $.ajax({
+                url: form.attr('data-url'),
+                data: form.serialize(),
+                type: form.attr('method'),
+                dataType: 'json',
+                success: function(data){
+                   if(data.form_is_valid){
+                       $('#modal-element').modal('hide');
+                       window.location.replace('/orders')
+                   } else {
+                       $('#modal-element .modal-content').html(data.html_form)
+                   }
+                }
+            })
+            return false;
+        }
+
+    //delete
+    $('#orders-table').on("click",".show-form-delete",ShowForm);
+    $('#modal-element').on("submit",".delete-form",SaveForm)
+    });
+  </script>
 </body>
 </html>

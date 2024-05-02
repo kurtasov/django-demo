@@ -90,7 +90,7 @@ class Employees(models.Model):
 
 
 class OrderDetails(models.Model):
-    orderid = models.OneToOneField('Orders', models.DO_NOTHING, db_column='OrderID', primary_key=True)  # Field name made lowercase. The composite primary key (OrderID, ProductID) found, that is not supported. The first column is selected.
+    orderid = models.OneToOneField('Orders', models.CASCADE, db_column='OrderID', primary_key=True)  # Field name made lowercase. The composite primary key (OrderID, ProductID) found, that is not supported. The first column is selected.
     productid = models.ForeignKey('Products', models.DO_NOTHING, db_column='ProductID')  # Field name made lowercase.
     unitprice = models.TextField(db_column='UnitPrice')  # Field name made lowercase. This field type is a guess.
     quantity = models.IntegerField(db_column='Quantity')  # Field name made lowercase.

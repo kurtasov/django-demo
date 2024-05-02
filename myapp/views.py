@@ -1,5 +1,6 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
+from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView
 from wildewidgets import DataTable
 from myapp.models import Customers, Orders
@@ -104,24 +105,45 @@ class DbTableView(TemplateView):
         table.add_column('PostalCode')
 
         for o in data:
-            table.add_row(CompanyName=o.companyname, Address=o.address, City=o.city, Region=o.region, PostalCode=o.postalcode)
+            table.add_row(CompanyName=o.companyname, Address=o.address, City=o.city, Region=o.region,
+                          PostalCode=o.postalcode)
 
         kwargs['dbtable'] = table
         return super().get_context_data(**kwargs)
 
+
+def delete_order(request, orderid):
+    data = dict()
+    order = get_object_or_404(Orders, orderid=orderid)
+    if request.method == "POST":
+        order.delete()
+        data['form_is_valid'] = True
+    else:
+        context = {'orderid': order.orderid}
+        data['html_form'] = loader.render_to_string('delete_order.html', context, request=request)
+
+    return JsonResponse(data)
+
+
 class OrdersView(TemplateView):
-   template_name = ("dbtable.html")
+    template_name = ("dbtable.html")
 
-   def get_context_data(self, **kwargs):
-       table = DataTable()
-       data = Orders.objects.all()
+    def get_context_data(self, **kwargs):
+        table = DataTable()
+        data = Orders.objects.all()
 
-       table.add_column('OrderID')
-       table.add_column('ShipName')
-       table.add_column('Employee')
+        table.add_column('OrderID')
+        table.add_column('ShipName')
+        table.add_column('Employee')
+        table.add_column('Actions')
 
-       for o in data:
-           table.add_row(OrderID=o.orderid, ShipName=o.shipname, Employee=f'{o.employeeid.lastname}, {o.employeeid.firstname}')
+        for o in data:
+            table.add_row(OrderID=o.orderid, ShipName=o.shipname,
+                          Employee=f'{o.employeeid.lastname}, {o.employeeid.firstname}',
+                          Actions=f'''<button class="btn btn-danger show-form-delete" data-url="delete/{o.orderid}">
+           <span class="glyphicon glyphicon-trash"></span>
+           Delete
+           </button>''')
 
-       kwargs['dbtable'] = table
-       return super().get_context_data(**kwargs)
+        kwargs['dbtable'] = table
+        return super().get_context_data(**kwargs)
