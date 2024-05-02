@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.views.generic.base import TemplateView
 from wildewidgets import DataTable
-from myapp.models import Customers
+from myapp.models import Customers, Orders
 
 
 def hello(request):
@@ -108,3 +108,20 @@ class DbTableView(TemplateView):
 
         kwargs['dbtable'] = table
         return super().get_context_data(**kwargs)
+
+class OrdersView(TemplateView):
+   template_name = ("dbtable.html")
+
+   def get_context_data(self, **kwargs):
+       table = DataTable()
+       data = Orders.objects.all()
+
+       table.add_column('OrderID')
+       table.add_column('ShipName')
+       table.add_column('Employee')
+
+       for o in data:
+           table.add_row(OrderID=o.orderid, ShipName=o.shipname, Employee=f'{o.employeeid.lastname}, {o.employeeid.firstname}')
+
+       kwargs['dbtable'] = table
+       return super().get_context_data(**kwargs)

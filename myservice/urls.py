@@ -29,4 +29,5 @@ urlpatterns = [
     path('wildewidgets_json', WildewidgetDispatch.as_view(), name='wildewidgets_json'),
     path("datatable/", views.TableView.as_view(), name="datatable"),
     path("dbtable/", views.DbTableView.as_view(), name="dbtable"),
+    path("orders/", views.OrdersView.as_view(), name="orders"),
 ]
