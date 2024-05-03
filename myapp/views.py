@@ -128,7 +128,7 @@ def delete_order(request, orderid):
 def create_order(request):
     data = dict()
     employees = Employees.objects.all()
-    context = {'employee_list': [e.lastname for e in employees]}
+    context = {'employee_list': [e.lastname + ", " + e.firstname for e in employees]}
     data['html_form'] = loader.render_to_string('create_order.html', context=context, request=request)
     if request.method == "POST":
         country_name = request.POST.get("country")
